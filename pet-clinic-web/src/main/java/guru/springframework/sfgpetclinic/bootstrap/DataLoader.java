@@ -65,6 +65,11 @@ public class DataLoader implements CommandLineRunner {
         owner1.setCity("Miami");
         owner1.setTelephpne("1231231234");
 
+        // builder pattern
+//        Owner builtOwner = owner1.builder().address("address 1").city("city 1").telephpne("1234567890").build();
+//        builtOwner.setFirstName("f");
+//        builtOwner.setLastName("l");
+
         Pet mikesPet = new Pet();
         mikesPet.setPetType(savedDogPetType);
         mikesPet.setBirthDate(LocalDate.now());

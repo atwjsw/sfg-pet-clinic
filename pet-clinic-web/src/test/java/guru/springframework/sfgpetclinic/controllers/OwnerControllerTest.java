@@ -14,7 +14,9 @@ import org.springframework.ui.Model;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -31,6 +33,8 @@ public class OwnerControllerTest {
 
     OwnerController ownerController;
     Set<Owner> owners;
+    Owner owner1;
+    Owner owner2;
     MockMvc mockMvc;
 
     @Before
@@ -38,43 +42,55 @@ public class OwnerControllerTest {
         MockitoAnnotations.initMocks(this);
         ownerController = new OwnerController(ownerService);
         owners = new HashSet<>();
-        Owner owner1 = new Owner();
+        owner1 = new Owner();
         owner1.setId(1L);
-        Owner owner2 = new Owner();
+        owner2 = new Owner();
         owner2.setId(2L);
         owners.add(owner1);
         owners.add(owner2);
         mockMvc = MockMvcBuilders.standaloneSetup(ownerController).build();
-        when(ownerService.findAll()).thenReturn(owners);
     }
 
     @Test
     public void listOwners() {
 
+        when(ownerService.findAll()).thenReturn(owners);
         ArgumentCaptor<Set<Owner>> argumentCaptor = ArgumentCaptor.forClass(Set.class);
 
         String viewName = ownerController.listOwners(model);
-        assertEquals(viewName, "owners/index");
-        verify(model).addAttribute(eq("owners"), argumentCaptor.capture());
+        assertEquals(viewName, "owners/ownersList");
+        verify(model).addAttribute(eq("selections"), argumentCaptor.capture());
         assertEquals(argumentCaptor.getValue().size(), 2);
     }
 
     @Test
     public void listOwnersMvc() throws Exception {
 
+        when(ownerService.findAll()).thenReturn(owners);
         mockMvc.perform(get("/owners"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("owners/index"))
-                .andExpect(model().attribute("owners", hasSize(2)));
+                .andExpect(view().name("owners/ownersList"))
+                .andExpect(model().attribute("selections", hasSize(2)));
     }
 
     @Test
     public void findOwners() throws Exception{
+
         mockMvc.perform(get("/owners/find"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("notimplemented"));
 
         verifyZeroInteractions(ownerService);
+    }
+
+    @Test
+    public void showOwner() throws Exception{
+
+        when(ownerService.findById(1L)).thenReturn(owner1);
+        mockMvc.perform(get("/owners/1"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("/owners/ownerDetails"))
+                .andExpect(model().attribute("owner", hasProperty("id", is(1L))));
     }
 
 }

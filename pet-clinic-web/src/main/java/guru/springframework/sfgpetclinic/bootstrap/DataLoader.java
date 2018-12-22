@@ -63,7 +63,7 @@ public class DataLoader implements CommandLineRunner {
         owner1.setLastName("Weston");
         owner1.setAddress("123 Brickerel");
         owner1.setCity("Miami");
-        owner1.setTelephpne("1231231234");
+        owner1.setTelephone("1231231234");
 
         // builder pattern
 //        Owner builtOwner = owner1.builder().address("address 1").city("city 1").telephpne("1234567890").build();
@@ -84,7 +84,7 @@ public class DataLoader implements CommandLineRunner {
         owner2.setLastName("Glenanne");
         owner2.setAddress("123 Brickerel");
         owner2.setCity("Miami");
-        owner2.setTelephpne("1231231234");
+        owner2.setTelephone("1231231234");
 
         Pet fionasCat = new Pet();
         fionasCat.setPetType(savedCatPetType);

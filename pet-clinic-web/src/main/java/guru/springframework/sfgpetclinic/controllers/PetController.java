@@ -70,5 +70,27 @@ public class PetController {
         return "redirect:owners/" + owner.getId();
     }
 
+    @GetMapping("/pets/{petId}/edit")
+    public String initUpdateForm(Owner owner, Model model, @PathVariable Long petId) {
+        Pet pet = petService.findById(petId);
+        owner.getPets().add(pet);
+        pet.setOwner(owner);
+        model.addAttribute("pet", pet);
+        return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
+    }
+
+    @PostMapping("/pets/{petId}/edit")
+    public String processUpdateForm(@Valid Pet pet, BindingResult result, Owner owner, Model model) {
+        if (result.hasErrors()) {
+            pet.setOwner(owner);
+            model.addAttribute("pet", pet);
+            return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
+        }
+
+        owner.addPet(pet);
+        petService.save(pet);
+        return "redirect:/owners/" + owner.getId();
+    }
+
 
 }

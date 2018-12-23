@@ -50,15 +50,6 @@ public class OwnerControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(ownerController).build();
     }
 
-//    @Test
-//    public void listOwnersMvc() throws Exception {
-//        when(ownerService.findAll()).thenReturn(owners);
-//        mockMvc.perform(get("/owners"))
-//                .andExpect(status().isOk())
-//                .andExpect(view().name("owners/ownersList"))
-//                .andExpect(model().attribute("selections", hasSize(2)));
-//    }
-
     @Test
     public void findOwners() throws Exception{
         mockMvc.perform(get("/owners/find"))
@@ -85,6 +76,15 @@ public class OwnerControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/owners/1"))
                 .andExpect(model().attributeExists("owner"));
+    }
+
+    @Test
+    public void processFindFormEmptyInputReturnAll() throws Exception{
+        when(ownerService.findAllByLastNameLike("%" + "" + "%")).thenReturn(new ArrayList<>(owners));
+        mockMvc.perform(get("/owners"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("owners/ownersList"))
+                .andExpect(model().attribute("selections", hasSize(2)));
     }
 
     @Test

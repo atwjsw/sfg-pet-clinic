@@ -67,7 +67,7 @@ public class PetController {
         }
 
         petService.save(pet);
-        return "redirect:owners/" + owner.getId();
+        return "redirect:/owners/" + owner.getId();
     }
 
     @GetMapping("/pets/{petId}/edit")
